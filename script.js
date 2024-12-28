@@ -35,8 +35,8 @@ staggerLinks.forEach((link) => {
 });
 
 /* General Parallax */
-document.querySelectorAll("[data-parallax-container]").forEach((container) => {
-    const image = container.querySelector("[data-parallax-img]");
+document.querySelectorAll("[parallax-container]").forEach((container) => {
+    const image = container.querySelector("[parallax-img]");
     
     if (image) {
       const containerHeight = container.offsetHeight;
