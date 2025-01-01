@@ -21,14 +21,14 @@ staggerLinks.forEach((link) => {
   link.addEventListener("mouseenter", function () {
     gsap.to(letters, {
       yPercent: -200,
-      duration: 0.5,
+      duration: 0.3,
       ease: "power3.out",
     });
   });
   link.addEventListener("mouseleave", function () {
     gsap.to(letters, {
       yPercent: 0,
-      duration: 0.5,
+      duration: 0.3,
       ease: "power3.out",
     });
   });
@@ -94,3 +94,101 @@ const getY = (element) => {
     });
 
 };
+
+/* Flip */
+
+    gsap.registerPlugin(Flip);
+    ScrollTrigger.normalizeScroll(true);
+  
+    // Utility to get attribute or default value
+    function getAttr(el, attrName, defaultVal) {
+      const attrVal = el.getAttribute(attrName);
+      if (attrVal === null) return defaultVal;
+      if (attrVal === "true") return true;
+      if (attrVal === "false") return false;
+      if (!isNaN(attrVal)) return Number(attrVal);
+      return attrVal;
+    }
+  
+    // Select all scrollflip components
+    document.querySelectorAll("[tr-scrollflip-element='component']").forEach((component, componentIndex) => {
+      const originEls = component.querySelectorAll("[tr-scrollflip-element='origin']");
+      const targetEls = component.querySelectorAll("[tr-scrollflip-element='target']");
+      const scrubStartEl = component.querySelector("[tr-scrollflip-scrubstart]");
+      const scrubEndEl = component.querySelector("[tr-scrollflip-scrubend]");
+  
+      // Read settings from attributes
+      const startSetting = getAttr(scrubStartEl, "tr-scrollflip-scrubstart", "top top");
+      const endSetting = getAttr(scrubEndEl, "tr-scrollflip-scrubend", "bottom bottom");
+      const staggerSpeed = getAttr(component, "tr-scrollflip-staggerspeed", 0);
+      const staggerDirection = getAttr(component, "tr-scrollflip-staggerdirection", "start");
+      const scale = getAttr(component, "tr-scrollflip-scale", false);
+      const breakpoint = getAttr(component, "tr-scrollflip-breakpoint", 0);
+  
+      // Assign flip IDs
+      originEls.forEach((el, index) => {
+        const flipId = `${componentIndex}-${index}`;
+        el.dataset.flipId = flipId;
+        if (targetEls[index]) targetEls[index].dataset.flipId = flipId;
+      });
+  
+      // Timeline creation function
+      let timeline;
+      const createTimeline = () => {
+        if (timeline) {
+          timeline.kill();
+          targetEls.forEach(el => gsap.set(el, { clearProps: "all" }));
+        }
+  
+        document.body.classList.add("scrollflip-relative");
+        gsap.matchMedia().add(`(min-width: ${breakpoint}px)`, () => {
+          const state = Flip.getState(originEls);
+          timeline = gsap.timeline({
+            scrollTrigger: {
+              trigger: scrubStartEl,
+              endTrigger: scrubEndEl,
+              start: startSetting,
+              end: endSetting,
+              scrub: true,
+            }
+          });
+  
+          timeline.add(
+            Flip.from(state, {
+              targets: targetEls,
+              scale: scale,
+              stagger: { amount: staggerSpeed, from: staggerDirection }
+            })
+          );
+        });
+        document.body.classList.remove("scrollflip-relative");
+      };
+  
+      createTimeline();
+  
+      // Rebuild timeline on resize
+      window.addEventListener("resize", () => {
+        clearTimeout(window._scrollFlipResizeTimer);
+        window._scrollFlipResizeTimer = setTimeout(createTimeline, 250);
+      });
+
+// Animate egg mask on scroll
+
+gsap.set(".egg-wrap-inside", {
+    webkitMaskSize: "200%",
+    maskSize: "200%"
+})
+
+gsap.to(".egg-wrap-inside", {
+    scrollTrigger: {
+      trigger: scrubStartEl,
+      start: "top top",
+      end: "center 45%",
+      scrub: true,
+    },
+    webkitMaskSize: "75%",
+    maskSize: "75%"
+  });
+
+    });
+    
