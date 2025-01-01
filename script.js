@@ -150,6 +150,7 @@ const getY = (element) => {
               start: startSetting,
               end: endSetting,
               scrub: true,
+              //pin: true,
             }
           });
   
@@ -183,11 +184,12 @@ gsap.to(".egg-wrap-inside", {
     scrollTrigger: {
       trigger: scrubStartEl,
       start: "top top",
-      end: "center 45%",
-      scrub: true,
+      end: "5% top",
+      scrub: 1,
     },
-    webkitMaskSize: "75%",
-    maskSize: "75%"
+    webkitMaskSize: "90%",
+    maskSize: "90%",
+    onComplete: () => ScrollTrigger.refresh(),
   });
 
     });
