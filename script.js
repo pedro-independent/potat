@@ -205,23 +205,40 @@ const getY = (element) => {
         window._scrollFlipResizeTimer = setTimeout(createTimeline, 250);
       });
 
-// Animate egg mask on scroll
+// Animate egg mask on scroll   
+
+
+// gsap.set(".egg-wrap-inside", {
+//     webkitMaskSize: "200%",
+//     maskSize: "200%"
+// })
+
+// gsap.to(".egg-wrap-inside", {
+//     scrollTrigger: {
+//       trigger: scrubStartEl,
+//       start: "top top",
+//       end: "5% top",
+//       scrub: 1,
+//     },
+//     webkitMaskSize: "90%",
+//     maskSize: "90%",
+//     onComplete: () => ScrollTrigger.refresh(),
+//   });
 
 gsap.set(".egg-wrap-inside", {
-    webkitMaskSize: "200%",
-    maskSize: "200%"
+  clipPath: "circle(75% at 50% 50%)",
 })
 
 gsap.to(".egg-wrap-inside", {
-    scrollTrigger: {
-      trigger: scrubStartEl,
-      start: "top top",
-      end: "5% top",
-      scrub: 1,
-    },
-    webkitMaskSize: "90%",
-    maskSize: "90%",
-    onComplete: () => ScrollTrigger.refresh(),
-  });
+  scrollTrigger: {
+    trigger: scrubStartEl,
+    start: "top top",
+    end: "5% top",
+    scrub: 1,
+  },
+  clipPath: "circle(30% at 50% 50%)",
+  
+  onComplete: () => ScrollTrigger.refresh(),
+});
 
     });
