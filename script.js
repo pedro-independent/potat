@@ -242,3 +242,52 @@ gsap.to(".egg-wrap-inside", {
 });
 
     });
+
+/* ------------- Events -------------- */
+if (page === "events") {
+
+    const containers = document.querySelectorAll(".swiper-slide.events-slider");
+
+    containers.forEach((container, index) => {
+      const numberBlock = container.querySelector(".number-eyebrow");
+      numberBlock.textContent = index + 1;
+    });
+
+/* GSAP Menu color change  */
+
+
+
+
+// ==== Logo color switch ================================
+
+document.addEventListener('DOMContentLoaded', () => {
+  const clipRect = document.querySelector('#reveal-clip rect');
+
+  let width = 0;
+  const maxWidth = 100; // Width of the SVG viewBox
+
+  function animateLogo() {
+      if (width < maxWidth) {
+          width += 1; // Adjust speed by changing increment
+          clipRect.setAttribute('width', width);
+          requestAnimationFrame(animateLogo);
+      }
+  }
+
+  // Start animation
+  animateLogo();
+});
+
+document.addEventListener('scroll', () => {
+  const scrollTop = window.scrollY;
+  const maxScroll = 300; // Adjust based on when you want the effect to complete
+  const progress = Math.min(scrollTop / maxScroll, 1); // Normalize between 0 and 1
+
+  const clipRect = document.querySelector('#reveal-clip rect');
+  const maxWidth = 100; // Width of the SVG viewBox
+  clipRect.setAttribute('width', progress * maxWidth);
+});
+
+
+
+}
