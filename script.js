@@ -57,6 +57,82 @@ document.querySelectorAll("[parallax-container]").forEach((container) => {
     }
   });
 
+/* Open Menu */
+
+// gsap.registerPlugin(CustomEase);
+
+// CustomEase.create( "main", "0.65, 0.01, 0.05, 0.99" );
+
+// gsap.defaults({
+//   ease:"main",
+//   duration:0.7
+// })
+  
+// function initMenu(){
+//   let navWrap = document.querySelector(".nav")
+//   let state = navWrap.getAttribute("data-nav")
+//   let overlay = navWrap.querySelector(".overlay")
+//   let menu = navWrap.querySelector(".menu")
+//   let bgPanels = navWrap.querySelectorAll(".bg-panel")
+//   let menuToggles = document.querySelectorAll("[data-menu-toggle]")
+//   let menuLinks = navWrap.querySelectorAll(".menu-link")
+//   let fadeTargets = navWrap.querySelectorAll("[data-menu-fade]")
+//   let menuButton = document.querySelector(".menu-button")
+//   let menuButtonTexts = menuButton.querySelectorAll("p")
+//   let menuButtonIcon = menuButton.querySelector(".menu-button-icon")
+
+//   let tl = gsap.timeline()
+  
+//   const openNav = () =>{
+//     navWrap.setAttribute("data-nav", "open")
+    
+//     tl.clear()
+//     .set(navWrap,{display:"block"})
+//     .set(menu,{xPercent:0},"<")
+//     .fromTo(menuButtonTexts,{yPercent:0},{yPercent:-100,stagger:0.2})
+//     .fromTo(menuButtonIcon,{rotate:0},{rotate:315},"<")
+//     .fromTo(overlay,{autoAlpha:0},{autoAlpha:1},"<")
+//     .fromTo(bgPanels,{xPercent:101},{xPercent:0,stagger:0.12,duration: 0.575},"<")
+//     .fromTo(menuLinks,{yPercent:140,rotate:10},{yPercent:0, rotate:0,stagger:0.05},"<+=0.35")
+//     .fromTo(fadeTargets,{autoAlpha:0,yPercent:50},{autoAlpha:1, yPercent:0,stagger:0.04},"<+=0.2")
+//   }
+  
+//   const closeNav = () =>{
+//     navWrap.setAttribute("data-nav", "closed")
+    
+//     tl.clear()
+//     .to(overlay,{autoAlpha:0})
+//     .to(menu,{xPercent:120},"<")
+//     .to(menuButtonTexts,{yPercent:0},"<")
+//     .to(menuButtonIcon,{rotate:0},"<")
+//     .set(navWrap,{display:"none"})
+//   }  
+  
+//   // Toggle menu open / close depending on its current state
+//   menuToggles.forEach((toggle) => {
+//     toggle.addEventListener("click", () => {
+//       state = navWrap.getAttribute("data-nav");
+//       if (state === "open") {
+//         closeNav();
+//       } else {
+//         openNav();
+//       }
+//     });    
+//   });
+  
+//   // If menu is open, you can close it using the "escape" key
+//   document.addEventListener("keydown", (e) => {
+//     if (e.key === "Escape" && navWrap.getAttribute("data-nav") === "open") {
+//       closeNav();
+//     }
+//   });
+// }
+
+// document.addEventListener("DOMContentLoaded",()=>{
+//   initMenu()
+// })
+
+
 /* Custom Cursor */
 // For a mouse follower which dynamically changes text:
 
@@ -124,6 +200,14 @@ const getY = (element) => {
         onComplete: () => ScrollTrigger.refresh(),
       });
     });
+
+    const containers = document.querySelectorAll(".swiper-slide.events-slider");
+
+    containers.forEach((container, index) => {
+      const numberBlock = container.querySelector(".number-eyebrow");
+      numberBlock.textContent = index + 1;
+    });
+
 
 };
 
@@ -208,85 +292,49 @@ const getY = (element) => {
 // Animate egg mask on scroll   
 
 
-// gsap.set(".egg-wrap-inside", {
-//     webkitMaskSize: "200%",
-//     maskSize: "200%"
-// })
-
-// gsap.to(".egg-wrap-inside", {
-//     scrollTrigger: {
-//       trigger: scrubStartEl,
-//       start: "top top",
-//       end: "5% top",
-//       scrub: 1,
-//     },
-//     webkitMaskSize: "90%",
-//     maskSize: "90%",
-//     onComplete: () => ScrollTrigger.refresh(),
-//   });
-
 gsap.set(".egg-wrap-inside", {
-  clipPath: "circle(75% at 50% 50%)",
+    webkitMaskSize: "180%",
+    maskSize: "180%"
 })
 
 gsap.to(".egg-wrap-inside", {
-  scrollTrigger: {
-    trigger: scrubStartEl,
-    start: "top top",
-    end: "5% top",
-    scrub: 1,
-  },
-  clipPath: "circle(30% at 50% 50%)",
+    scrollTrigger: {
+      trigger: scrubStartEl,
+      start: "top top",
+      end: "5% top",
+      scrub: 1,
+    },
+    webkitMaskSize: "75%",
+    maskSize: "75%",
+    onComplete: () => ScrollTrigger.refresh(),
+  });
+
+// gsap.set(".egg-wrap-inside", {
+//   clipPath: "circle(75% at 50% 50%)",
+// })
+
+// gsap.to(".egg-wrap-inside", {
+//   scrollTrigger: {
+//     trigger: scrubStartEl,
+//     start: "top top",
+//     end: "5% top",
+//     scrub: 1,
+//   },
+//   clipPath: "circle(30% at 50% 50%)",
   
-  onComplete: () => ScrollTrigger.refresh(),
-});
+//   onComplete: () => ScrollTrigger.refresh(),
+// });
 
     });
 
 /* ------------- Events -------------- */
 if (page === "events") {
+  const containers = document.querySelectorAll(".swiper-slide.events-slider");
 
-    const containers = document.querySelectorAll(".swiper-slide.events-slider");
-
-    containers.forEach((container, index) => {
-      const numberBlock = container.querySelector(".number-eyebrow");
-      numberBlock.textContent = index + 1;
-    });
-
-/* GSAP Menu color change  */
-
-
-
-
-// ==== Logo color switch ================================
-
-document.addEventListener('DOMContentLoaded', () => {
-  const clipRect = document.querySelector('#reveal-clip rect');
-
-  let width = 0;
-  const maxWidth = 100; // Width of the SVG viewBox
-
-  function animateLogo() {
-      if (width < maxWidth) {
-          width += 1; // Adjust speed by changing increment
-          clipRect.setAttribute('width', width);
-          requestAnimationFrame(animateLogo);
-      }
-  }
-
-  // Start animation
-  animateLogo();
-});
-
-document.addEventListener('scroll', () => {
-  const scrollTop = window.scrollY;
-  const maxScroll = 300; // Adjust based on when you want the effect to complete
-  const progress = Math.min(scrollTop / maxScroll, 1); // Normalize between 0 and 1
-
-  const clipRect = document.querySelector('#reveal-clip rect');
-  const maxWidth = 100; // Width of the SVG viewBox
-  clipRect.setAttribute('width', progress * maxWidth);
-});
+  containers.forEach((container, index) => {
+    const numberBlock = container.querySelector(".number-eyebrow");
+    numberBlock.textContent = index + 1;
+  });
 
 
 
