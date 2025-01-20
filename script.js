@@ -14,11 +14,70 @@ window.onbeforeunload = function () {
 //   }
 // });
 
-/* Open Menu */
+/* Menu Open */
+
+const menuBtn = document.querySelector('.menu-btn');
+const navBg = document.querySelector('.nav-bg');
+const navFill = document.querySelector('.nav-fill');
+
+menuBtn.addEventListener('click', () => {
+  navBg.style.display = 'flex';
+  gsap.to(navFill, {
+    x: '0%',
+    duration: 0.6,
+    ease: 'power2.out',
+  });
+});
+
+navBg.addEventListener('click', () => {
+  gsap.to(navFill, {
+    x: '110%',
+    duration: 0.6,
+    ease: 'power2.in',
+    onComplete: () => {
+      navBg.style.display = 'none';
+    },
+  });
+});
+
+// Prevent clicks inside the form from propagating to navBg
+navFill.addEventListener('click', (e) => {
+  e.stopPropagation();
+});
 
 
+/* Form Open */
 
-// Animation
+const openForm = document.querySelector("[open-form]");
+const formBg = document.querySelector('.form-bg');
+const formFill = document.querySelector('.form-fill');
+
+openForm.addEventListener('click', () => {
+  formBg.style.display = 'block';
+  gsap.to(formFill, {
+    x: '0%',
+    duration: 0.6,
+    ease: 'power2.out',
+  });
+});
+
+formBg.addEventListener('click', () => {
+  gsap.to(formFill, {
+    x: '-110%',
+    duration: 0.6,
+    ease: 'power2.in',
+    onComplete: () => {
+      formBg.style.display = 'none';
+    },
+  });
+});
+
+// Prevent clicks inside the form from propagating to navBg
+formFill.addEventListener('click', (e) => {
+  e.stopPropagation();
+});
+
+/* Buttons Hover*/
 const staggerLinks = document.querySelectorAll("[hover-btn]");
 staggerLinks.forEach((link) => {
   const letters = link.querySelectorAll("[hover-btn-text]");
@@ -63,18 +122,16 @@ document.querySelectorAll("[parallax-container]").forEach((container) => {
 
 
 /* Custom Cursor */
-// For a mouse follower which dynamically changes text:
-
   
   // Set the cursor position to follow the mouse
   gsap.set(".cursor", { xPercent: -50, yPercent: -50 });
 
-  let xTo = gsap.quickTo(".cursor", "x", { duration: 0.5, ease: "power2" });
-  let yTo = gsap.quickTo(".cursor", "y", { duration: 0.5, ease: "power2" });
+  let cursorX = gsap.quickTo(".cursor", "x", { duration: 0.5, ease: "power2" });
+  let cursorY = gsap.quickTo(".cursor", "y", { duration: 0.5, ease: "power2" });
 
   window.addEventListener("mousemove", e => {
-    xTo(e.clientX);
-    yTo(e.clientY);
+    cursorX(e.clientX);
+    cursorY(e.clientY);
   });
 
   // Select all elements with the [data-cursor] attribute
@@ -92,6 +149,41 @@ document.querySelectorAll("[parallax-container]").forEach((container) => {
       cursorText.textContent = ""; // Reset the text when the mouse leaves
     });
   });
+
+// POP-UPS Close Button
+
+    gsap.set(".cursor-egg", { xPercent: -50, yPercent: -50 });
+
+    let cursorEggX = gsap.quickTo(".cursor-egg", "x", { duration: 0.5, ease: "power2" });
+    let cursorEggY = gsap.quickTo(".cursor-egg", "y", { duration: 0.5, ease: "power2" });
+  
+    window.addEventListener("mousemove", e => {
+      cursorEggX(e.clientX);
+      cursorEggY(e.clientY);
+    });
+  
+    // Select all elements with the [data-cursor] attribute
+    let cursorEgg = document.querySelectorAll("[data-egg-cursor]");
+    let cursorEggText = document.querySelector(".cursor-egg p"); // Select the <p> inside .cursor
+  
+    cursorEgg.forEach((link) => {
+      let text = link.getAttribute("data-egg-cursor"); // Get the attribute value
+    
+      link.addEventListener("mouseenter", (e) => {
+        // Ensure the hover is directly on .nav-bg and not on a child element
+        if (e.target === link) {
+          cursorEggText.textContent = text; // Update the <p> text inside .cursor
+        }
+      });
+    
+      link.addEventListener("mouseleave", (e) => {
+        // Ensure the leave event is from the same element
+        if (e.target === link) {
+          cursorEggText.textContent = ""; // Reset the text when the mouse leaves
+        }
+      });
+    });
+    
 
 
 /* ------------ END OF GENERAL ------------ */
