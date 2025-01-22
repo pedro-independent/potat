@@ -46,37 +46,6 @@ navFill.addEventListener('click', (e) => {
 });
 
 
-/* Form Open */
-
-const openForm = document.querySelector("[open-form]");
-const formBg = document.querySelector('.form-bg');
-const formFill = document.querySelector('.form-fill');
-
-openForm.addEventListener('click', () => {
-  formBg.style.display = 'block';
-  gsap.to(formFill, {
-    x: '0%',
-    duration: 0.6,
-    ease: 'power2.out',
-  });
-});
-
-formBg.addEventListener('click', () => {
-  gsap.to(formFill, {
-    x: '-110%',
-    duration: 0.6,
-    ease: 'power2.in',
-    onComplete: () => {
-      formBg.style.display = 'none';
-    },
-  });
-});
-
-// Prevent clicks inside the form from propagating to navBg
-formFill.addEventListener('click', (e) => {
-  e.stopPropagation();
-});
-
 /* Buttons Hover*/
 const staggerLinks = document.querySelectorAll("[hover-btn]");
 staggerLinks.forEach((link) => {
@@ -95,6 +64,76 @@ staggerLinks.forEach((link) => {
       ease: "power3.out",
     });
   });
+});
+
+/* The Fork Widget Open */
+
+const openFork = document.querySelectorAll("[open-fork]");
+const forkBg = document.querySelector('.fork-bg');
+const forkFill = document.querySelector('.fork-fill');
+
+// Add event listener to all buttons
+openFork.forEach((link) => {
+  link.addEventListener('click', () => {
+    forkBg.style.display = 'block';
+    gsap.to(forkFill, {
+      x: '0%',
+      duration: 0.6,
+      ease: 'power2.out',
+    });
+  });
+});
+
+// Close the fork widget when clicking on the background
+forkBg.addEventListener('click', () => {
+  gsap.to(forkFill, {
+    x: '-110%',
+    duration: 0.6,
+    ease: 'power2.in',
+    onComplete: () => {
+      forkBg.style.display = 'none';
+    },
+  });
+});
+
+// Prevent clicks inside forkFill from propagating to forkBg
+forkFill.addEventListener('click', (e) => {
+  e.stopPropagation();
+});
+
+/* Gift Form Open */
+
+const openGift = document.querySelectorAll("[open-gift]");
+const giftBg = document.querySelector('.gift-bg');
+const giftFill = document.querySelector('.gift-fill');
+
+// Add event listener to all buttons
+openGift.forEach((link) => {
+  link.addEventListener('click', () => {
+    giftBg.style.display = 'block';
+    gsap.to(giftFill, {
+      x: '0%',
+      duration: 0.6,
+      ease: 'power2.out',
+    });
+  });
+});
+
+// Close the fork widget when clicking on the background
+giftBg.addEventListener('click', () => {
+  gsap.to(giftFill, {
+    x: '-110%',
+    duration: 0.6,
+    ease: 'power2.in',
+    onComplete: () => {
+      giftBg.style.display = 'none';
+    },
+  });
+});
+
+// Prevent clicks inside forkFill from propagating to forkBg
+giftFill.addEventListener('click', (e) => {
+  e.stopPropagation();
 });
 
 /* General Parallax */
@@ -330,22 +369,6 @@ gsap.to(".egg-wrap-inside", {
     onComplete: () => ScrollTrigger.refresh(),
   });
 
-// gsap.set(".egg-wrap-inside", {
-//   clipPath: "circle(75% at 50% 50%)",
-// })
-
-// gsap.to(".egg-wrap-inside", {
-//   scrollTrigger: {
-//     trigger: scrubStartEl,
-//     start: "top top",
-//     end: "5% top",
-//     scrub: 1,
-//   },
-//   clipPath: "circle(30% at 50% 50%)",
-  
-//   onComplete: () => ScrollTrigger.refresh(),
-// });
-
     });
 
 /* ------------- Events -------------- */
@@ -357,6 +380,35 @@ if (page === "events") {
     numberBlock.textContent = index + 1;
   });
 
+/* Form Open */
 
+const openForm = document.querySelector("[open-form]");
+const formBg = document.querySelector('.form-bg');
+const formFill = document.querySelector('.form-fill');
+
+openForm.addEventListener('click', () => {
+  formBg.style.display = 'block';
+  gsap.to(formFill, {
+    x: '0%',
+    duration: 0.6,
+    ease: 'power2.out',
+  });
+});
+
+formBg.addEventListener('click', () => {
+  gsap.to(formFill, {
+    x: '-110%',
+    duration: 0.6,
+    ease: 'power2.in',
+    onComplete: () => {
+      formBg.style.display = 'none';
+    },
+  });
+});
+
+// Prevent clicks inside the form from propagating to navBg
+formFill.addEventListener('click', (e) => {
+  e.stopPropagation();
+});
 
 }
