@@ -6,14 +6,6 @@ window.onbeforeunload = function () {
   window.scrollTo(0, 0);
 };
 
-/* Buttons Hover */
-// let windowWidth = $(window).innerWidth();
-// window.addEventListener("resize", function () {
-//   if (windowWidth !== $(window).innerWidth()) {
-//     windowWidth = $(window).innerWidth();
-//   }
-// });
-
 /* Menu Open */
 
 const menuBtn = document.querySelector('.menu-btn');
@@ -65,6 +57,98 @@ staggerLinks.forEach((link) => {
     });
   });
 });
+
+/* Links Hover */
+
+let splitText, splitHeading;
+
+function runSplit() {
+  // Initialize SplitType for hover links
+  splitText = new SplitType("[hover-link]", {
+    types: "words, chars"
+  });
+
+  // // Initialize SplitType for scroll headings
+  splitHeading = new SplitType("[scroll-heading]", {
+    types: "lines"
+  });
+}
+
+runSplit();
+
+// ———— animation
+const hoverLinks = document.querySelectorAll("[hover-link]");
+hoverLinks.forEach((link) => {
+  const letters = link.querySelectorAll("[hover-link-text] .char");
+  link.addEventListener("mouseenter", function () {
+    gsap.to(letters, {
+      yPercent: -100,
+      duration: 0.5,
+      ease: "power4.inOut",
+      stagger: { each: 0.03, from: "start" },
+      overwrite: true
+    });
+  });
+  link.addEventListener("mouseleave", function () {
+    gsap.to(letters, {
+      yPercent: 0,
+      duration: 0.5,
+      ease: "power4.inOut",
+      stagger: { each: 0.03, from: "start" },
+    });
+  });
+});
+
+/* Headings Reveal On Scroll */
+
+
+// ———— Headings Reveal on Scroll Animation
+if (splitHeading) {
+  const headings = document.querySelectorAll("[scroll-heading]");
+
+  headings.forEach((heading) => {
+    const lines = heading.querySelectorAll(".lines"); // Get lines that SplitType has added
+
+    // Create the ScrollTrigger animation
+    gsap.to(lines, {
+      scrollTrigger: {
+        trigger: heading, // The heading element to trigger the animation
+        start: "top 80%", // Trigger when the heading is 80% in the viewport
+        end: "top 60%", // Animation runs within this range
+        scrub: true, // Smooth scrubbing with scroll
+        markers: true, // For debugging; remove in production
+      },
+      yPercent: -100, // Slide the lines upward
+      duration: 0.5, // Duration of the animation
+      ease: "power4.inOut", // Easing for smooth motion
+      stagger: { each: 0.03, from: "start" }, // Stagger lines
+      overwrite: true,
+    });
+  });
+}
+// const headings = document.querySelectorAll("[scroll-heading]");
+
+// headings.forEach((heading) => {
+//   const lines = heading.querySelectorAll("[scroll-heading-text] .lines");
+
+//   // Create the ScrollTrigger animation
+//   gsap.to(lines, {
+//     scrollTrigger: {
+//       trigger: heading, // The heading element to trigger the animation
+//       start: "top 80%", // Trigger when the heading is 80% in the viewport
+//       end: "top 60%", // Animation runs within this range
+//       scrub: false, // Smooth scrubbing isn't needed for this effect
+//       markers: true, // For debugging; remove in production
+//     },
+//     yPercent: -100, // Slide the letters upward
+//     duration: 0.5, // Duration of the animation
+//     ease: "power4.inOut", // Easing for smooth motion
+//     stagger: { each: 0.03, from: "start" }, // Stagger letters
+//     overwrite: true,
+//   });
+// });
+
+
 
 /* The Fork Widget Open */
 
@@ -269,107 +353,153 @@ const getY = (element) => {
     });
 
 
-};
 
 /* Flip */
 
-    gsap.registerPlugin(Flip);
-    ScrollTrigger.normalizeScroll(true);
-  
-    // Utility to get attribute or default value
-    function getAttr(el, attrName, defaultVal) {
-      const attrVal = el.getAttribute(attrName);
-      if (attrVal === null) return defaultVal;
-      if (attrVal === "true") return true;
-      if (attrVal === "false") return false;
-      if (!isNaN(attrVal)) return Number(attrVal);
-      return attrVal;
+gsap.registerPlugin(Flip);
+ScrollTrigger.normalizeScroll(true);
+
+// Utility to get attribute or default value
+function getAttr(el, attrName, defaultVal) {
+  const attrVal = el.getAttribute(attrName);
+  if (attrVal === null) return defaultVal;
+  if (attrVal === "true") return true;
+  if (attrVal === "false") return false;
+  if (!isNaN(attrVal)) return Number(attrVal);
+  return attrVal;
+}
+
+// Select all scrollflip components
+document.querySelectorAll("[tr-scrollflip-element='component']").forEach((component, componentIndex) => {
+  const originEls = component.querySelectorAll("[tr-scrollflip-element='origin']");
+  const targetEls = component.querySelectorAll("[tr-scrollflip-element='target']");
+  const scrubStartEl = component.querySelector("[tr-scrollflip-scrubstart]");
+  const scrubEndEl = component.querySelector("[tr-scrollflip-scrubend]");
+
+  // Read settings from attributes
+  const startSetting = getAttr(scrubStartEl, "tr-scrollflip-scrubstart", "top top");
+  const endSetting = getAttr(scrubEndEl, "tr-scrollflip-scrubend", "bottom bottom");
+  const staggerSpeed = getAttr(component, "tr-scrollflip-staggerspeed", 0);
+  const staggerDirection = getAttr(component, "tr-scrollflip-staggerdirection", "start");
+  const scale = getAttr(component, "tr-scrollflip-scale", false);
+  const breakpoint = getAttr(component, "tr-scrollflip-breakpoint", 0);
+
+  // Assign flip IDs
+  originEls.forEach((el, index) => {
+    const flipId = `${componentIndex}-${index}`;
+    el.dataset.flipId = flipId;
+    if (targetEls[index]) targetEls[index].dataset.flipId = flipId;
+  });
+
+  // Timeline creation function
+  let timeline;
+  const createTimeline = () => {
+    if (timeline) {
+      timeline.kill();
+      targetEls.forEach(el => gsap.set(el, { clearProps: "all" }));
     }
-  
-    // Select all scrollflip components
-    document.querySelectorAll("[tr-scrollflip-element='component']").forEach((component, componentIndex) => {
-      const originEls = component.querySelectorAll("[tr-scrollflip-element='origin']");
-      const targetEls = component.querySelectorAll("[tr-scrollflip-element='target']");
-      const scrubStartEl = component.querySelector("[tr-scrollflip-scrubstart]");
-      const scrubEndEl = component.querySelector("[tr-scrollflip-scrubend]");
-  
-      // Read settings from attributes
-      const startSetting = getAttr(scrubStartEl, "tr-scrollflip-scrubstart", "top top");
-      const endSetting = getAttr(scrubEndEl, "tr-scrollflip-scrubend", "bottom bottom");
-      const staggerSpeed = getAttr(component, "tr-scrollflip-staggerspeed", 0);
-      const staggerDirection = getAttr(component, "tr-scrollflip-staggerdirection", "start");
-      const scale = getAttr(component, "tr-scrollflip-scale", false);
-      const breakpoint = getAttr(component, "tr-scrollflip-breakpoint", 0);
-  
-      // Assign flip IDs
-      originEls.forEach((el, index) => {
-        const flipId = `${componentIndex}-${index}`;
-        el.dataset.flipId = flipId;
-        if (targetEls[index]) targetEls[index].dataset.flipId = flipId;
-      });
-  
-      // Timeline creation function
-      let timeline;
-      const createTimeline = () => {
-        if (timeline) {
-          timeline.kill();
-          targetEls.forEach(el => gsap.set(el, { clearProps: "all" }));
+
+    document.body.classList.add("scrollflip-relative");
+    gsap.matchMedia().add(`(min-width: ${breakpoint}px)`, () => {
+      const state = Flip.getState(originEls);
+      timeline = gsap.timeline({
+        scrollTrigger: {
+          trigger: scrubStartEl,
+          endTrigger: scrubEndEl,
+          start: startSetting,
+          end: endSetting,
+          scrub: true,
+          //pin: true,
         }
-  
-        document.body.classList.add("scrollflip-relative");
-        gsap.matchMedia().add(`(min-width: ${breakpoint}px)`, () => {
-          const state = Flip.getState(originEls);
-          timeline = gsap.timeline({
-            scrollTrigger: {
-              trigger: scrubStartEl,
-              endTrigger: scrubEndEl,
-              start: startSetting,
-              end: endSetting,
-              scrub: true,
-              //pin: true,
-            }
-          });
-  
-          timeline.add(
-            Flip.from(state, {
-              targets: targetEls,
-              scale: scale,
-              stagger: { amount: staggerSpeed, from: staggerDirection }
-            })
-          );
-        });
-        document.body.classList.remove("scrollflip-relative");
-      };
-  
-      createTimeline();
-  
-      // Rebuild timeline on resize
-      window.addEventListener("resize", () => {
-        clearTimeout(window._scrollFlipResizeTimer);
-        window._scrollFlipResizeTimer = setTimeout(createTimeline, 250);
       });
+
+      timeline.add(
+        Flip.from(state, {
+          targets: targetEls,
+          scale: scale,
+          stagger: { amount: staggerSpeed, from: staggerDirection }
+        })
+      );
+    });
+    document.body.classList.remove("scrollflip-relative");
+  };
+
+  createTimeline();
+
+  // Rebuild timeline on resize
+  window.addEventListener("resize", () => {
+    clearTimeout(window._scrollFlipResizeTimer);
+    window._scrollFlipResizeTimer = setTimeout(createTimeline, 250);
+  });
 
 // Animate egg mask on scroll   
-
-
 gsap.set(".egg-wrap-inside", {
-    webkitMaskSize: "180%",
-    maskSize: "180%"
+webkitMaskSize: "190%",
+maskSize: "190%"
 })
 
 gsap.to(".egg-wrap-inside", {
-    scrollTrigger: {
-      trigger: scrubStartEl,
-      start: "top top",
-      end: "5% top",
-      scrub: 1,
-    },
-    webkitMaskSize: "75%",
-    maskSize: "75%",
-    onComplete: () => ScrollTrigger.refresh(),
+scrollTrigger: {
+  trigger: scrubStartEl,
+  start: "top top",
+  end: "5% top",
+  scrub: 1,
+},
+webkitMaskSize: "75%",
+maskSize: "75%",
+onComplete: () => ScrollTrigger.refresh(),
+});
+
+const homeHeading = gsap.timeline({
+scrollTrigger: {
+  trigger: scrubStartEl,
+  start: "top top",
+  end: "20% top",
+  scrub: true,
+},
+onComplete: () => ScrollTrigger.refresh(),
+});
+
+homeHeading.to(".home-hero-heading", { opacity: 0, duration: 0.5 })
+.to(".home-hero-heading", { scale: 0, duration: 1 }, "<");
+
+gsap.set(".potat-logo, .egg-svg, .menu-btn-text", {color: "#F2E5C8"});
+
+gsap.to(".potat-logo, .egg-svg, .menu-btn-text", {
+  scrollTrigger: {
+    trigger: scrubStartEl,
+    start: "top top",
+    end: "5% top",
+    scrub: true,
+  },
+  color: "#043427",
   });
 
-    });
+
+});
+
+
+function setupScrollTrigger(triggerElement, enterColor, leaveColor) {
+  gsap.to(".potat-logo, .egg-svg, .menu-btn-text", {
+    scrollTrigger: {
+      trigger: triggerElement,
+      start: "top top",
+      end: "bottom top",
+      onEnter: () => gsap.to(".potat-logo, .egg-svg, .menu-btn-text", { color: enterColor, duration: 0.5 }),
+      onLeave: () => gsap.to(".potat-logo, .egg-svg, .menu-btn-text", { color: leaveColor, duration: 0.5 }),
+      onEnterBack: () => gsap.to(".potat-logo, .egg-svg, .menu-btn-text", { color: enterColor, duration: 0.5 }),
+      onLeaveBack: () => gsap.to(".potat-logo, .egg-svg, .menu-btn-text", { color: leaveColor, duration: 0.5 }),
+    },
+  });
+}
+
+// Add triggers for multiple sections
+setupScrollTrigger(".section_reservation", "#F2E5C8", "#043427");
+setupScrollTrigger(".gift-container", "#F2E5C8", "#043427");
+
+
+};
+
 
 /* ------------- Events -------------- */
 if (page === "events") {
