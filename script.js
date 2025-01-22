@@ -68,10 +68,6 @@ function runSplit() {
     types: "words, chars"
   });
 
-  // // Initialize SplitType for scroll headings
-  splitHeading = new SplitType("[scroll-heading]", {
-    types: "lines"
-  });
 }
 
 runSplit();
@@ -101,52 +97,38 @@ hoverLinks.forEach((link) => {
 
 /* Headings Reveal On Scroll */
 
-
-// ———— Headings Reveal on Scroll Animation
-if (splitHeading) {
-  const headings = document.querySelectorAll("[scroll-heading]");
+  // Select headings with the attribute
+  const headings = document.querySelectorAll('[scroll-reveal]');
 
   headings.forEach((heading) => {
-    const lines = heading.querySelectorAll(".lines"); // Get lines that SplitType has added
+      // Initialize SplitType.js with lines only
+      const splitText = new SplitType(heading, { types: "lines", lineClass: "line" });
 
-    // Create the ScrollTrigger animation
-    gsap.to(lines, {
-      scrollTrigger: {
-        trigger: heading, // The heading element to trigger the animation
-        start: "top 80%", // Trigger when the heading is 80% in the viewport
-        end: "top 60%", // Animation runs within this range
-        scrub: true, // Smooth scrubbing with scroll
-        markers: true, // For debugging; remove in production
-      },
-      yPercent: -100, // Slide the lines upward
-      duration: 0.5, // Duration of the animation
-      ease: "power4.inOut", // Easing for smooth motion
-      stagger: { each: 0.03, from: "start" }, // Stagger lines
-      overwrite: true,
-    });
+      // Wrap each .line in its own .line-wrap div
+      const lines = heading.querySelectorAll('.line');
+      lines.forEach((line) => {
+          const lineWrap = document.createElement('div');
+          lineWrap.classList.add('line-wrap');
+          line.parentNode.insertBefore(lineWrap, line);
+          lineWrap.appendChild(line); 
+      });
+
+      gsap.fromTo(
+          lines,
+          { yPercent: 100 },
+          {
+              yPercent: 0,
+              duration: 1,
+              ease: "power3.out",
+              stagger: 0.2,
+              scrollTrigger: {
+                  trigger: heading,
+                  start: "top 80%",
+                  end: "top 80%",
+              },
+          }
+      );
   });
-}
-// const headings = document.querySelectorAll("[scroll-heading]");
-
-// headings.forEach((heading) => {
-//   const lines = heading.querySelectorAll("[scroll-heading-text] .lines");
-
-//   // Create the ScrollTrigger animation
-//   gsap.to(lines, {
-//     scrollTrigger: {
-//       trigger: heading, // The heading element to trigger the animation
-//       start: "top 80%", // Trigger when the heading is 80% in the viewport
-//       end: "top 60%", // Animation runs within this range
-//       scrub: false, // Smooth scrubbing isn't needed for this effect
-//       markers: true, // For debugging; remove in production
-//     },
-//     yPercent: -100, // Slide the letters upward
-//     duration: 0.5, // Duration of the animation
-//     ease: "power4.inOut", // Easing for smooth motion
-//     stagger: { each: 0.03, from: "start" }, // Stagger letters
-//     overwrite: true,
-//   });
-// });
 
 
 
