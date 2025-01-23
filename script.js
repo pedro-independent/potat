@@ -86,7 +86,7 @@ hoverLinks.forEach((link) => {
     gsap.to(letters, {
       yPercent: -100,
       duration: 0.5,
-      ease: "power4.inOut",
+      ease: "power3.out",
       stagger: { each: 0.03, from: "start" },
       overwrite: true
     });
@@ -95,7 +95,7 @@ hoverLinks.forEach((link) => {
     gsap.to(letters, {
       yPercent: 0,
       duration: 0.5,
-      ease: "power4.inOut",
+      ease: "power3.out",
       stagger: { each: 0.03, from: "start" },
     });
   });
