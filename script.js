@@ -11,6 +11,7 @@ window.onbeforeunload = function () {
 const menuBtn = document.querySelector('.menu-btn');
 const navBg = document.querySelector('.nav-bg');
 const navFill = document.querySelector('.nav-fill');
+const menuMobileBtn = document.querySelector('.menu-mobile-btn');
 
 menuBtn.addEventListener('click', () => {
   navBg.style.display = 'flex';
@@ -21,7 +22,7 @@ menuBtn.addEventListener('click', () => {
   });
 });
 
-navBg.addEventListener('click', () => {
+const closeMenu = () => {
   gsap.to(navFill, {
     x: '110%',
     duration: 0.6,
@@ -30,12 +31,17 @@ navBg.addEventListener('click', () => {
       navBg.style.display = 'none';
     },
   });
-});
+};
 
-// Prevent clicks inside the form from propagating to navBg
+navBg.addEventListener('click', closeMenu);
+
+// Prevent clicks inside the navFill from propagating to navBg
 navFill.addEventListener('click', (e) => {
   e.stopPropagation();
 });
+
+// Close the menu when clicking the menuMobileBtn
+menuMobileBtn.addEventListener('click', closeMenu);
 
 
 /* Buttons Hover*/
@@ -123,8 +129,8 @@ hoverLinks.forEach((link) => {
               stagger: 0.2,
               scrollTrigger: {
                   trigger: heading,
-                  start: "top 80%",
-                  end: "top 80%",
+                  start: "top 85%",
+                  end: "top 85%",
               },
           }
       );
@@ -137,11 +143,13 @@ hoverLinks.forEach((link) => {
 const openFork = document.querySelectorAll("[open-fork]");
 const forkBg = document.querySelector('.fork-bg');
 const forkFill = document.querySelector('.fork-fill');
+const closeFork = document.querySelectorAll("[close-fork]");
 
-// Add event listener to all buttons
-openFork.forEach((link) => {
-  link.addEventListener('click', () => {
-    forkBg.style.display = 'block';
+
+// Add event listener to all elements with the [open-bio] attribute
+openFork.forEach((button) => {
+  button.addEventListener('click', () => {
+    forkBg.style.display = 'flex';
     gsap.to(forkFill, {
       x: '0%',
       duration: 0.6,
@@ -150,8 +158,8 @@ openFork.forEach((link) => {
   });
 });
 
-// Close the fork widget when clicking on the background
-forkBg.addEventListener('click', () => {
+// Function to close the bio menu
+const closeForkWrap = () => {
   gsap.to(forkFill, {
     x: '-110%',
     duration: 0.6,
@@ -160,11 +168,19 @@ forkBg.addEventListener('click', () => {
       forkBg.style.display = 'none';
     },
   });
-});
+};
 
-// Prevent clicks inside forkFill from propagating to forkBg
+// Close the bio menu when clicking outside of bioFill
+forkBg.addEventListener('click', closeForkWrap);
+
+// Prevent clicks inside the bioFill from propagating to bioBg
 forkFill.addEventListener('click', (e) => {
   e.stopPropagation();
+});
+
+// Add event listener to all elements with the [close-bio] attribute
+closeFork.forEach((button) => {
+  button.addEventListener('click', closeForkWrap);
 });
 
 /* Gift Form Open */
@@ -172,11 +188,13 @@ forkFill.addEventListener('click', (e) => {
 const openGift = document.querySelectorAll("[open-gift]");
 const giftBg = document.querySelector('.gift-bg');
 const giftFill = document.querySelector('.gift-fill');
+const closeGift = document.querySelectorAll("[close-gift]");
 
-// Add event listener to all buttons
-openGift.forEach((link) => {
-  link.addEventListener('click', () => {
-    giftBg.style.display = 'block';
+
+// Add event listener to all elements with the [open-bio] attribute
+openGift.forEach((button) => {
+  button.addEventListener('click', () => {
+    giftBg.style.display = 'flex';
     gsap.to(giftFill, {
       x: '0%',
       duration: 0.6,
@@ -185,8 +203,8 @@ openGift.forEach((link) => {
   });
 });
 
-// Close the fork widget when clicking on the background
-giftBg.addEventListener('click', () => {
+// Function to close the bio menu
+const closeGiftWrap = () => {
   gsap.to(giftFill, {
     x: '-110%',
     duration: 0.6,
@@ -195,11 +213,19 @@ giftBg.addEventListener('click', () => {
       giftBg.style.display = 'none';
     },
   });
-});
+};
 
-// Prevent clicks inside forkFill from propagating to forkBg
+// Close the bio menu when clicking outside of bioFill
+giftBg.addEventListener('click', closeGiftWrap);
+
+// Prevent clicks inside the bioFill from propagating to bioBg
 giftFill.addEventListener('click', (e) => {
   e.stopPropagation();
+});
+
+// Add event listener to all elements with the [close-bio] attribute
+closeGift.forEach((button) => {
+  button.addEventListener('click', closeGiftWrap);
 });
 
 /* General Parallax */
@@ -228,13 +254,17 @@ document.querySelectorAll("[parallax-container]").forEach((container) => {
 
 /* Custom Cursor */
   
+// Check if the viewport is desktop (below 991px width)
+if (window.innerWidth > 991) {
+  /* Custom Cursor */
+
   // Set the cursor position to follow the mouse
   gsap.set(".cursor", { xPercent: -50, yPercent: -50 });
 
   let cursorX = gsap.quickTo(".cursor", "x", { duration: 0.5, ease: "power2" });
   let cursorY = gsap.quickTo(".cursor", "y", { duration: 0.5, ease: "power2" });
 
-  window.addEventListener("mousemove", e => {
+  window.addEventListener("mousemove", (e) => {
     cursorX(e.clientX);
     cursorY(e.clientY);
   });
@@ -245,7 +275,7 @@ document.querySelectorAll("[parallax-container]").forEach((container) => {
 
   links.forEach((link) => {
     let text = link.getAttribute("data-cursor"); // Get the attribute value
-    
+
     link.addEventListener("mouseenter", () => {
       cursorText.textContent = text; // Update the <p> text inside .cursor
     });
@@ -254,9 +284,11 @@ document.querySelectorAll("[parallax-container]").forEach((container) => {
       cursorText.textContent = ""; // Reset the text when the mouse leaves
     });
   });
+}
+
 
 // POP-UPS Close Button
-
+if (window.innerWidth > 991) {
     gsap.set(".cursor-egg", { xPercent: -50, yPercent: -50 });
 
     let cursorEggX = gsap.quickTo(".cursor-egg", "x", { duration: 0.5, ease: "power2" });
@@ -288,8 +320,7 @@ document.querySelectorAll("[parallax-container]").forEach((container) => {
         }
       });
     });
-    
-
+  }
 
 /* ------------ END OF GENERAL ------------ */
 /* ------------- HOME -------------- */
@@ -414,11 +445,26 @@ document.querySelectorAll("[tr-scrollflip-element='component']").forEach((compon
     window._scrollFlipResizeTimer = setTimeout(createTimeline, 250);
   });
 
-// Animate egg mask on scroll   
+if (window.innerWidth > 991) {   
 gsap.set(".egg-wrap-inside", {
 webkitMaskSize: "190%",
 maskSize: "190%"
 })
+}
+
+if (window.innerWidth < 991) {
+  gsap.set(".egg-wrap-inside", {
+    webkitMaskSize: "250%",
+    maskSize: "250%"
+    })
+}
+
+if (window.innerWidth < 768) {
+  gsap.set(".egg-wrap-inside", {
+    webkitMaskSize: "350%",
+    maskSize: "350%"
+    })
+}
 
 gsap.to(".egg-wrap-inside", {
 scrollTrigger: {
@@ -482,6 +528,56 @@ setupScrollTrigger(".gift-container", "#F2E5C8", "#043427");
 
 };
 
+/* ------------- About -------------- */
+if (page === "about") {
+
+/* Team Bio Open */
+
+const openBio = document.querySelectorAll("[open-bio]");
+const bioBg = document.querySelector('.bio-bg');
+const bioFill = document.querySelector('.bio-fill');
+const closeBio = document.querySelectorAll("[close-bio]");
+
+// Add event listener to all elements with the [open-bio] attribute
+openBio.forEach((button) => {
+  button.addEventListener('click', () => {
+    bioBg.style.display = 'flex';
+    gsap.to(bioFill, {
+      x: '0%',
+      duration: 0.6,
+      ease: 'power2.out',
+    });
+  });
+});
+
+// Function to close the bio menu
+const closeMenu = () => {
+  gsap.to(bioFill, {
+    x: '110%',
+    duration: 0.6,
+    ease: 'power2.in',
+    onComplete: () => {
+      bioBg.style.display = 'none';
+    },
+  });
+};
+
+// Close the bio menu when clicking outside of bioFill
+bioBg.addEventListener('click', closeMenu);
+
+// Prevent clicks inside the bioFill from propagating to bioBg
+bioFill.addEventListener('click', (e) => {
+  e.stopPropagation();
+});
+
+// Add event listener to all elements with the [close-bio] attribute
+closeBio.forEach((button) => {
+  button.addEventListener('click', closeMenu);
+});
+
+
+}
+
 
 /* ------------- Events -------------- */
 if (page === "events") {
@@ -494,20 +590,26 @@ if (page === "events") {
 
 /* Form Open */
 
-const openForm = document.querySelector("[open-form]");
+const openForm = document.querySelectorAll("[open-form]");
 const formBg = document.querySelector('.form-bg');
 const formFill = document.querySelector('.form-fill');
+const closeForm = document.querySelectorAll("[close-form]");
 
-openForm.addEventListener('click', () => {
-  formBg.style.display = 'block';
-  gsap.to(formFill, {
-    x: '0%',
-    duration: 0.6,
-    ease: 'power2.out',
+
+// Add event listener to all elements with the [open-bio] attribute
+openForm.forEach((button) => {
+  button.addEventListener('click', () => {
+    formBg.style.display = 'flex';
+    gsap.to(formFill, {
+      x: '0%',
+      duration: 0.6,
+      ease: 'power2.out',
+    });
   });
 });
 
-formBg.addEventListener('click', () => {
+// Function to close the bio menu
+const closeMenu = () => {
   gsap.to(formFill, {
     x: '-110%',
     duration: 0.6,
@@ -516,11 +618,19 @@ formBg.addEventListener('click', () => {
       formBg.style.display = 'none';
     },
   });
-});
+};
 
-// Prevent clicks inside the form from propagating to navBg
+// Close the bio menu when clicking outside of bioFill
+formBg.addEventListener('click', closeMenu);
+
+// Prevent clicks inside the bioFill from propagating to bioBg
 formFill.addEventListener('click', (e) => {
   e.stopPropagation();
+});
+
+// Add event listener to all elements with the [close-bio] attribute
+closeForm.forEach((button) => {
+  button.addEventListener('click', closeMenu);
 });
 
 }
