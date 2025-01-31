@@ -6,8 +6,37 @@ window.onbeforeunload = function () {
   window.scrollTo(0, 0);
 };
 
-/* Menu Open */
+/* Menu Scroll */
+function initDetectScrollingDirection() {
+  let lastScrollTop = 0;
+  const threshold = 10; // Minimal scroll distance to switch to up/down 
+  const thresholdTop = 50; // Minimal scroll distance from top of window to start
 
+  window.addEventListener('scroll', () => {
+    const nowScrollTop = window.scrollY;
+
+    if (Math.abs(lastScrollTop - nowScrollTop) >= threshold) {
+      // Update Scroll Direction
+      const direction = nowScrollTop > lastScrollTop ? 'down' : 'up';
+      document.querySelectorAll('[data-scrolling-direction]').forEach(el => 
+        el.setAttribute('data-scrolling-direction', direction)
+      );
+
+      // Update Scroll Started
+      const started = nowScrollTop > thresholdTop;
+      document.querySelectorAll('[data-scrolling-started]').forEach(el => 
+        el.setAttribute('data-scrolling-started', started ? 'true' : 'false')
+      );
+
+      lastScrollTop = nowScrollTop;
+    }
+  });
+}
+
+// Initialize Detect Scrolling Direction
+  initDetectScrollingDirection();
+
+/* Menu Open */
 const menuBtn = document.querySelector('.menu-btn');
 const navBg = document.querySelector('.nav-bg');
 const navFill = document.querySelector('.nav-fill');
@@ -491,9 +520,9 @@ onComplete: () => ScrollTrigger.refresh(),
 homeHeading.to(".home-hero-heading", { opacity: 0, duration: 0.5 })
 .to(".home-hero-heading", { scale: 0, duration: 1 }, "<");
 
-gsap.set(".potat-logo, .egg-svg, .menu-btn-text", {color: "#F2E5C8"});
+gsap.set(".potat-logo, .egg-svg, .menu-btn-text, .lg-en, .lg-pt", {color: "#F2E5C8"});
 
-gsap.to(".potat-logo, .egg-svg, .menu-btn-text", {
+gsap.to(".potat-logo, .egg-svg, .menu-btn-text, .lg-en, .lg-pt", {
   scrollTrigger: {
     trigger: scrubStartEl,
     start: "top top",
@@ -508,15 +537,15 @@ gsap.to(".potat-logo, .egg-svg, .menu-btn-text", {
 
 
 function setupScrollTrigger(triggerElement, enterColor, leaveColor) {
-  gsap.to(".potat-logo, .egg-svg, .menu-btn-text", {
+  gsap.to(".potat-logo, .egg-svg, .menu-btn-text, .lg-en, .lg-pt", {
     scrollTrigger: {
       trigger: triggerElement,
       start: "top top",
       end: "bottom top",
-      onEnter: () => gsap.to(".potat-logo, .egg-svg, .menu-btn-text", { color: enterColor, duration: 0.5 }),
-      onLeave: () => gsap.to(".potat-logo, .egg-svg, .menu-btn-text", { color: leaveColor, duration: 0.5 }),
-      onEnterBack: () => gsap.to(".potat-logo, .egg-svg, .menu-btn-text", { color: enterColor, duration: 0.5 }),
-      onLeaveBack: () => gsap.to(".potat-logo, .egg-svg, .menu-btn-text", { color: leaveColor, duration: 0.5 }),
+      onEnter: () => gsap.to(".potat-logo, .egg-svg, .menu-btn-text, .lg-en, .lg-pt", { color: enterColor, duration: 0.5 }),
+      onLeave: () => gsap.to(".potat-logo, .egg-svg, .menu-btn-text, .lg-en, .lg-pt", { color: leaveColor, duration: 0.5 }),
+      onEnterBack: () => gsap.to(".potat-logo, .egg-svg, .menu-btn-text, .lg-en, .lg-pt", { color: enterColor, duration: 0.5 }),
+      onLeaveBack: () => gsap.to(".potat-logo, .egg-svg, .menu-btn-text, .lg-en, .lg-pt", { color: leaveColor, duration: 0.5 }),
     },
   });
 }
