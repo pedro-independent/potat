@@ -1,6 +1,25 @@
 /* ------------- GENERAL -------------- */
 const page = document.body.dataset.page;
 
+function disableScroll(currentDiv) {
+  document.body.classList.add('no-scroll');
+  // document.documentElement.style.overflow ='hidden';
+  // document.documentElement.style.touchAction = 'none';
+  currentDiv.addEventListener('wheel', function (e) {
+    e.stopPropagation();
+  });
+  
+  currentDiv.addEventListener('DOMMouseScroll', function (e) { // for Firefox
+    e.stopPropagation();
+  });
+
+}
+
+function enableScroll() {
+//  document.documentElement.style.overflow = '';
+  document.body.classList.remove('no-scroll');
+}
+
 /* GO BACK TO TOP ON REFRESH */
 window.onbeforeunload = function () {
   window.scrollTo(0, 0);
@@ -44,6 +63,8 @@ const menuMobileBtn = document.querySelector('.menu-mobile-btn');
 
 menuBtn.addEventListener('click', () => {
   navBg.style.display = 'flex';
+   disableScroll(navBg);
+
   gsap.to(navFill, {
     x: '0%',
     duration: 0.6,
@@ -52,6 +73,7 @@ menuBtn.addEventListener('click', () => {
 });
 
 const closeMenu = () => {
+  enableScroll();
   gsap.to(navFill, {
     x: '110%',
     duration: 0.6,
@@ -179,6 +201,7 @@ const closeFork = document.querySelectorAll("[close-fork]");
 openFork.forEach((button) => {
   button.addEventListener('click', () => {
     forkBg.style.display = 'flex';
+    disableScroll(forkBg);
     gsap.to(forkFill, {
       x: '0%',
       duration: 0.6,
@@ -189,6 +212,7 @@ openFork.forEach((button) => {
 
 // Function to close the bio menu
 const closeForkWrap = () => {
+  enableScroll();
   gsap.to(forkFill, {
     x: '-110%',
     duration: 0.6,
@@ -224,6 +248,7 @@ const closeGift = document.querySelectorAll("[close-gift]");
 openGift.forEach((button) => {
   button.addEventListener('click', () => {
     giftBg.style.display = 'flex';
+    disableScroll(giftBg);
     gsap.to(giftFill, {
       x: '0%',
       duration: 0.6,
@@ -234,6 +259,7 @@ openGift.forEach((button) => {
 
 // Function to close the bio menu
 const closeGiftWrap = () => {
+  enableScroll();
   gsap.to(giftFill, {
     x: '-110%',
     duration: 0.6,
@@ -571,6 +597,7 @@ const closeBio = document.querySelectorAll("[close-bio]");
 openBio.forEach((button) => {
   button.addEventListener('click', () => {
     bioBg.style.display = 'flex';
+    disableScroll(bioBg);
     gsap.to(bioFill, {
       x: '0%',
       duration: 0.6,
@@ -581,6 +608,7 @@ openBio.forEach((button) => {
 
 // Function to close the bio menu
 const closeMenu = () => {
+  enableScroll();
   gsap.to(bioFill, {
     x: '110%',
     duration: 0.6,
